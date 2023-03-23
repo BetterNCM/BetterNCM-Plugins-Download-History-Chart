@@ -1,0 +1,19 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#chart-container {
+	position: relative;
+	height: 100vh;
+	overflow: hidden;
+}
+.btns {
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 50px;
+}
