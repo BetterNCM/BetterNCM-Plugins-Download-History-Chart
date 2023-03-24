@@ -1,3 +1,23 @@
+data = data.replaceAll('$', ',""~').replaceAll('~', '],[');
+data = JSON.parse(data);
+data = data.map(p => {
+	p.data = p.data.map((d, i) => {
+		if (i == 0) {
+			return d;
+		}
+		d[0] += p.data[i - 1][0];
+		if (p.data[i - 1][1] !== '') {
+			d[1] += p.data[i - 1][1];
+		}
+		return d;
+	});
+	p.data = p.data.map((d, i) => {
+		d[0] *= 1000;
+		return d;
+	});
+	return p;
+});
+
 var dom = document.getElementById('chart-container');
 var myChart = echarts.init(dom, 'dark', {
 	renderer: 'canvas',

@@ -25,6 +25,8 @@ slugs = []
 last_download = {}
 max_download = {}
 
+previous_time = 0
+
 for commit in repo.iter_commits(paths=file_path, reverse=True):
 	cnt += 1
 	file_content = commit.tree[file_path].data_stream.read().decode('utf-8')
@@ -37,9 +39,12 @@ for commit in repo.iter_commits(paths=file_path, reverse=True):
 		continue
 
 	data.append({
-		'time': int(commit.committed_datetime.timestamp() * 1000),
+		#'time': int(commit.committed_datetime.timestamp()),
+		# time - last commit time
+		'delta_time': int(commit.committed_datetime.timestamp()) - previous_time,
 		'download': {}
 	})
+	previous_time = int(commit.committed_datetime.timestamp())
 
 	for plugin in version_data:
 		data[-1]['download'][plugin['name']] = int(plugin['count'])
@@ -53,8 +58,8 @@ for commit in repo.iter_commits(paths=file_path, reverse=True):
 #print(cnt)
 
 slugs.sort(key=lambda slug: last_download[slug], reverse=True)
-slugs = [slug for slug in slugs if max_download[slug] >= 10]
-#slugs = [slug for slug in slugs if last_download[slug] >= 10]
+slugs = [slug for slug in slugs if max_download[slug] >= 20]
+slugs = [slug for slug in slugs if last_download[slug] >= 20]
 #print(slugs)
 
 
@@ -68,14 +73,22 @@ for slug in slugs:
       	'symbol': 'none',
 		'data': []
 	}
+	previous_download = 0
 	for version in data:
 		if slug in version['download']:
-			node['data'].append([version['time'], version['download'][slug]])
+			#node['data'].append([version['time'], version['download'][slug]])
+			node['data'].append([version['delta_time'], version['download'][slug] - previous_download])
+			previous_download = version['download'][slug]
 		else:
-			node['data'].append([version['time'], ''])
+			#node['data'].append([version['time'], ''])
+			node['data'].append([version['delta_time'], ''])
+			previous_download = 0
 	
 	output.append(node)
 
 
 with open('./chart/data.js', 'w') as f:
-	f.write('var data = ' + json.dumps(output))
+	outJson = json.dumps(output, separators=(',', ':'))
+	outJson = outJson.replace('],[', '~');
+	outJson = outJson.replace(',""~', '$');
+	f.write('var data = `' + outJson + '`;')
