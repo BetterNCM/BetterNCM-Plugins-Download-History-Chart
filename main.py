@@ -40,7 +40,6 @@ for commit in repo.iter_commits(paths=file_path, reverse=True):
 
 	data.append({
 		#'time': int(commit.committed_datetime.timestamp()),
-		# time - last commit time
 		'delta_time': int(commit.committed_datetime.timestamp()) - previous_time,
 		'download': {}
 	})
