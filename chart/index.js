@@ -17,6 +17,23 @@ data = data.map(p => {
 	});
 	return p;
 });
+if (window.location.href.indexOf('increment') !== -1) {
+	const beginDate = new Date(2023, 1 + 1, 6, 0, 0, 0).getTime();
+	data = data.map(p => {
+		p.data = p.data.filter(d => d[0] >= beginDate);
+		return p;
+	});
+	data = data.map(p => {
+		const newData = [];
+		for (let i = 1; i < p.data.length; i++) {
+			newData.push([p.data[i][0], p.data[i][1] - p.data[i - 1][1]]);
+		}
+		p.data = newData;
+		return p;
+	});
+}
+
+
 
 var dom = document.getElementById('chart-container');
 var myChart = echarts.init(dom, 'dark', {
@@ -44,7 +61,7 @@ option = {
 		})
 	},
 	grid: {
-		left: '3%',
+		left: '80px',
 		right: '4%',
 		bottom: '5%',
 		top: '10%',

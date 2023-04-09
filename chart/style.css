@@ -32,3 +32,39 @@ body {
 .btns button:hover {
     background: #ffffff11;
 }
+
+.switcher {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 0px;
+    width: 80px;
+    top: 5px;
+    gap: 5px;
+    bottom: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.switcher a {
+    color: #eee;
+    background: transparent;
+    padding: 8px 7px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+    background-color: transparent;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+.switcher a.current {
+    pointer-events: none;
+    background-color: #3b4365;
+}
+.switcher a:hover {
+    background-color: #3b4365;
+}
