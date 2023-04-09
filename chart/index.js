@@ -17,6 +17,22 @@ data = data.map(p => {
 	});
 	return p;
 });
+if (window.location.href.indexOf('day-increment') !== -1) {
+	data = data.map(p => {
+		const newData = [];
+		let lastDate = 0;
+		for (let i = p.data.length - 1; i >= 0; i--) {
+			let currentDate = new Date(p.data[i][0]);
+			currentDate = currentDate.getFullYear() * 10000 + (currentDate.getMonth() + 1) * 100 + currentDate.getDate();
+			if (currentDate !== lastDate) {
+				newData.unshift(p.data[i]);
+				lastDate = currentDate;
+			}
+		}
+		p.data = newData;
+		return p;
+	});
+}
 if (window.location.href.indexOf('increment') !== -1) {
 	const beginDate = new Date(2023, 1 + 1, 6, 0, 0, 0).getTime();
 	data = data.map(p => {
